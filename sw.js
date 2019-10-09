@@ -1,27 +1,35 @@
+ 
 var cacheName = 'hello-pwa';
 var filesToCache = [
   '/',
   '/tones',
   '/comments',
-  '/app.js',
+  'app.js',
   'manifest.json',
   'views/index.ejs',
   'views/tones.ejs',
   'views/comments.ejs',
   'css/style.css',
-  'main.js'
+  'js/main.js'
 ];
 
+/* Start the service worker and cache all of the app's content */
 self.addEventListener('install', function(e) {
-  e.waitUntil(caches.open(cacheName).then(function(cache){
-    return cache.addAll(filesToCache);
-  })
+    console.log("installing");
+  e.waitUntil(
+    caches.open(cacheName).then(function(cache) {
+      return cache.addAll(filesToCache);
+    })
   );
 });
 
+
+/* Serve cached content when offline */
 self.addEventListener('fetch', function(e) {
-  e.respondWith(caches.match(e.request).then(function(response){
-    return response || fetch(e.request);
-  })
+  console.log(e.request.url);
+  e.respondWith(
+    caches.match(e.request).then(function(response) {
+      return response || fetch(e.request);
+    })
   );
 });
